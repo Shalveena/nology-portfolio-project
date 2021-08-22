@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="./contact.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&family=WindSong:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <title>Portfolio</title>
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="./home.html">Home</a></li>
+        <li><a href="./contact.html">Contact Me</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <form class="form" action="" onsubmit="updateSS(event)">
+        <label for="email">Email</label>
+        <input type="text" name="email" id="email" required />
+        <label for="full-name">Full Name</label>
+        <input type="text" name="full-name" id="full-name" />
+        <label for="message">Message</label>
+        <textarea
+          name="message"
+          id="message"
+          cols="20"
+          rows="3"
+          placeholder="Type your messsage here"
+          required
+        ></textarea>
+        <div class="btn-container">
+          <button class="pink-btn">Clear</button>
+          <input type="submit" value="Submit" class="pink-btn" />
+        </div>
+      </form>
+    </main>
+    <footer>
+      <div class="messages-title">
+        <h3>Contact Messages</h3>
+        <button onclick="deleteMessages()">Clear Messages</button>
+      </div>
+
+      <div class="messages-container">
+        <dt id="input-messages"></dt>
+      </div>
+    </footer>
+
+    <script>
+      // Delete function
+      const deleteMessages = () => {
+        // console.log("It's working!");
+
+        // 1. Check if messages key exists
+        if (window.sessionStorage.getItem("messages")) {
+          // 2. If it exists, remove it (this will delete the messages)
+          window.sessionStorage.removeItem("messages");
+        }
+
+        // 3. Now that we have removed the messages in sessionStorage, we have to update what is showing on the webpage (so messages should not be showing on screen anymore too). To do this, we can call the renderMessages function again
+        renderMessages();
+      };
+
+      // Function to update sessionStorage when submit button clicked
+      const updateSS = function (event) {
+        // prevent default behaviour on submit event
+        event.preventDefault();
+
+        // target values input into the form by the user and save it in variables
+        const email = document.getElementById("email").value;
+        const fullName = document.getElementById("full-name").value;
+        const message = document.getElementById("message").value;
+
+        // put the variables together into an object
+        const formObject = { email, fullName, message };
+
+        // create an empty array where our object will be stored later.
+        let currentMessages = [];
+
+        // check if there is already data stored under the "messages" key in the session storage. If there is, we want to get it and put it into the currentMessages variable.
+        if (window.sessionStorage.getItem("messages")) {
+          currentMessages = JSON.parse(
+            window.sessionStorage.getItem("messages")
+          );
+        }
+
+        // then, we want to update the currentMessages array so it contains the new info input by the user into the form. Push the formObject to the currentMessages array.
+        currentMessages.push(formObject);
+
+        // next, we want to put the information from the currentMessages array back to the session storage (under the "messages" key) in order to update the session storage. We need to stringify the data before storing it in session storage
+
+        window.sessionStorage.setItem(
+          "messages",
+          JSON.stringify(currentMessages)
+        );
+
+        renderMessages();
+      };
+
+      // Render function
+      const renderMessages = function () {
+        // 1. check if there are already messages stored in sessionStorage, if so, get it and put it into the currentMessages variable.
+        let currentMessages = [];
+
+        if (window.sessionStorage.getItem("messages")) {
+          currentMessages = JSON.parse(
+            window.sessionStorage.getItem("messages")
+          );
+        }
+
+        // console.log(currentMessages);
+
+        // 2. create empty array where the HTML for all the messages/objects will be stored:
+        let messagesHTML = [];
+
+        // 3. loop through currentMessages, and for each element (which is an object) build a string of relevant HTML
+        for (let i = 0; i < currentMessages.length; i++) {
+          const currentMessage = currentMessages[i];
+          messageHTML = "";
+          messageHTML += `<dt>${currentMessage.fullName}: ${currentMessage.email}</dt>`;
+          messageHTML += `<dd>Message: ${currentMessage.message}</dd>`;
+          messageHTML += `<br />`;
+
+          // 4. push the string to the messagesHTML array (so it will end up containing multiple elements, each element containing the HTML string for each message)
+          messagesHTML.push(messageHTML);
+        }
+
+        // 5. target the relevant DOM element and change it's innerHTML to the HTML we wrote and stored in the messagesHTML array. Note that because that is an array, we need to change it into a string using .join method.
+        const displayedMsgs = document.getElementById("input-messages");
+        displayedMsgs.innerHTML = messagesHTML.join("");
+      };
+
+      renderMessages();
+    </script>
+  </body>
+</html>

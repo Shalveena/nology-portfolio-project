@@ -1,0 +1,42 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 100%;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+}
+nav > ul {
+  display: flex;
+  justify-content: flex-start;
+  list-style-type: none;
+}
+
+nav > ul > li {
+  padding: 2%;
+  margin: 1%;
+}
+
+nav > ul > li > a {
+  text-decoration: none;
+}
+
+nav > ul > li > a:hover {
+  color: rgb(231, 156, 168);
+}
+
+header {
+  text-align: center;
+  margin-top: 4%;
+  margin-bottom: 6%;
+}
+
+header > h1 {
+  font-family: "WindSong", cursive;
+  margin-bottom: 3%;
+  font-size: 3rem;
+}
